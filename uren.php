@@ -22,21 +22,16 @@ function vraag_gegevens() {
 }
 
 function sla_gegevens_op($bestand, $gegevens) {
-    // Controleer of het bestand al bestaat, anders maak een nieuwe aan
     $bestand_bestaat = file_exists($bestand);
 
-    // Open het bestand om gegevens toe te voegen
     $bestand_openen = fopen($bestand, 'a');
 
-    // Schrijf de header als het bestand nieuw is
     if (!$bestand_bestaat) {
         fputcsv($bestand_openen, ['Naam', 'Project', 'Datum', 'Aantal Uren']);
     }
 
-    // Schrijf de gegevens in het bestand
     fputcsv($bestand_openen, $gegevens);
 
-    // Sluit het bestand
     fclose($bestand_openen);
 }
 
@@ -44,10 +39,8 @@ function main() {
     echo "Welkom bij het urenregistratiesysteem!\n";
 
     while (true) {
-        // Verzamel gegevens van de gebruiker
         $gegevens = vraag_gegevens();
 
-        // Stop de loop als de gebruiker geen gegevens invoert
         if ($gegevens === null) {
             echo "\nBedankt! Het programma wordt afgesloten.\n";
             return;
