@@ -36,21 +36,13 @@ function sla_gegevens_op($bestand, $gegevens) {
 }
 
 function haal_feestdagen_op() {
-    echo "DEBUG: Start fetching holidays...\n";
+    $url = "https://date.nager.at/api/v3/NextPublicHolidays/NL";
 
-    $url = "https://date.nager.at/api/v3/publicholidays/2025/NL";
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    $response = curl_exec($ch);
+    $response = @file_get_contents($url);
     if ($response === false) {
-        echo "⚠️ cURL error: " . curl_error($ch) . "\n";
+        echo "⚠️ Kan feestdagen niet ophalen.\n";
+        return;
     }
-    curl_close($ch);
-
-    echo "DEBUG: API response: " . substr($response, 0, 200) . "...\n";
 
     $feestdagen = json_decode($response, true);
 
@@ -65,6 +57,7 @@ function haal_feestdagen_op() {
     }
     echo "\n";
 }
+
 
 
 
