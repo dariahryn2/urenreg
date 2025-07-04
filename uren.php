@@ -35,8 +35,42 @@ function sla_gegevens_op($bestand, $gegevens) {
     fclose($bestand_openen);
 }
 
+function haal_feestdagen_op() {
+    echo "DEBUG: Start fetching holidays...\n";
+
+    $url = "https://date.nager.at/api/v3/publicholidays/2025/NL";
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    if ($response === false) {
+        echo "⚠️ cURL error: " . curl_error($ch) . "\n";
+    }
+    curl_close($ch);
+
+    echo "DEBUG: API response: " . substr($response, 0, 200) . "...\n";
+
+    $feestdagen = json_decode($response, true);
+
+    if (!is_array($feestdagen)) {
+        echo "⚠️ Ongeldige reactie van de API.\n";
+        return;
+    }
+
+    echo "\n📅 Volgende feestdagen in Nederland:\n";
+    foreach (array_slice($feestdagen, 0, 5) as $dag) {
+        echo "- " . $dag['date'] . " – " . $dag['localName'] . "\n";
+    }
+    echo "\n";
+}
+
+
+
 function main() {
     echo "Welkom bij het urenregistratiesysteem!\n";
+    haal_feestdagen_op();
 
     while (true) {
         $gegevens = vraag_gegevens();
